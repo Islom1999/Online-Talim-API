@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email    String  @unique
+  fullname String
+  phone    String?
+  hash     String
+  hashedRt String?
+
+  roles   Role[]       @default([User])
+  courses UserCourse[]
+
+  @@map("users")
+}
+
+// many to many, relation - user <=> course
+model UserCourse {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId Int
+
+  @@unique([userId, courseId])
+}
+
+enum Role {
+  Admin
+  User
+  Teacher
+  StarAdmin
+
+  @@map("roles")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  image String?
+  title String  @unique
+  descr String?
+
+  courses Course[]
+
+  @@map("categories")
+}
+
+model Course {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  image  String
+  title  String  @unique
+  descr  String
+  author String?
+  amount Int?
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+
+  parts   Part[]
+  viewers UserCourse[]
+
+  @@map("courses")
+}
+
+model Part {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title String  @unique
+  descr String?
+
+  course   Course?  @relation(fields: [courseId], references: [id])
+  courseId Int?
+  lessons  Lesson[]
+
+  @@map("parts")
+}
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  video String?
+  title String  @unique
+  descr String?
+
+  part   Part? @relation(fields: [partId], references: [id])
+  partId Int?
+
+  @@map("lessons")
+}
