@@ -8,10 +8,12 @@ import {
 } from '@nestjs/common';
 
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
-import { RtGuard } from '../common/guards';
+import { RolesGuard, RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { AuthDto, } from './dto';
 import { Tokens } from './types';
+import { SigninDto } from './dto/signin.dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +29,7 @@ export class AuthController {
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@Body() dto: AuthDto): Promise<Tokens> {
+  signinLocal(@Body() dto: SigninDto): Promise<Tokens> {
     return this.authService.signinLocal(dto);
   }
 

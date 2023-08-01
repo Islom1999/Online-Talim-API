@@ -4,9 +4,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './common/guards';
 import { PrismaModule } from './prisma/prisma.module';
+import { LessonsModule } from './modules/lessons/lessons.module';
+import { PartsModule } from './modules/parts/parts.module';
+import { CoursesModule } from './modules/courses/courses.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, PrismaModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, PrismaModule, LessonsModule, PartsModule, CoursesModule, CategoriesModule],
   providers: [
     {
       provide: APP_GUARD,
