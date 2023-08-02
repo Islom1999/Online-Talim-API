@@ -56,7 +56,7 @@ model Category {
   updatedAt DateTime @updatedAt
 
   image String?
-  title String  @unique
+  title String  
   descr String?
 
   courses Course[]
@@ -70,7 +70,7 @@ model Course {
   updatedAt DateTime @updatedAt
 
   image  String
-  title  String  @unique
+  title  String 
   descr  String
   author String?
   amount Int?
@@ -87,16 +87,16 @@ model Course {
 model Part {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt 
 
-  title String  @unique
+  title String 
   descr String?
 
   course   Course?  @relation(fields: [courseId], references: [id])
   courseId Int?
   lessons  Lesson[]
 
-  @@map("parts")
+  @@map("parts") 
 }
 
 model Lesson {
@@ -105,11 +105,11 @@ model Lesson {
   updatedAt DateTime @updatedAt
 
   video String?
-  title String  @unique
+  title String  
   descr String?
 
   part   Part? @relation(fields: [partId], references: [id])
   partId Int?
 
-  @@map("lessons")
+  @@map("lessons") 
 }

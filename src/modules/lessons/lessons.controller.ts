@@ -10,26 +10,38 @@ import { Public } from 'src/common/decorators';
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
+  @Roles('User')
+  @UseGuards(RolesGuard)
+  @HttpCode(201)
   @Post()
   create(@Body() createLessonDto: CreateLessonDto) {
     return this.lessonsService.create(createLessonDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.lessonsService.findAll();
   }
 
+  @Public()
+  @HttpCode(200)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.lessonsService.findOne(+id);
   }
 
+  @Roles('User')
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLessonDto: UpdateLessonDto) {
     return this.lessonsService.update(+id, updateLessonDto);
   }
 
+  @Roles('User')
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.lessonsService.remove(+id);

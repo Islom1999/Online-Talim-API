@@ -1,5 +1,5 @@
 export class CreateLessonDto {
-    video: string;
+    video?: string;
     title: string;
-    descr: string;
+    descr?: string;
 }

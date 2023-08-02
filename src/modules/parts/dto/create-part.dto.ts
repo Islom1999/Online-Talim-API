@@ -1,1 +1,4 @@
-export class CreatePartDto {}
+export class CreatePartDto {
+    title: string 
+    descr?: string
+}
