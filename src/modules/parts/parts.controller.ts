@@ -27,12 +27,13 @@ export class PartsController {
 
   @Public()
   @HttpCode(200)
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.partsService.findOne(+id);
   }
 
   @Roles('User')
-  @UseGuards(RolesGuard)
+  @UseGuards(RolesGuard)  
   @HttpCode(200)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePartDto: UpdatePartDto) {

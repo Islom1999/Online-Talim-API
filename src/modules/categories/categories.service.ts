@@ -14,7 +14,17 @@ export class CategoriesService {
   }
 
   async findAll() {
-    const category = await this.prismService.category.findMany()
+    const category = await this.prismService.category.findMany({
+      include: {
+        courses: {
+          select: {
+            image: true,
+            title: true,
+            descr: true,
+          }
+        }
+      }
+    })
     if(!category[0]){
       throw new HttpException('No categories', HttpStatus.NOT_FOUND)
     }
@@ -22,7 +32,18 @@ export class CategoriesService {
   }
 
   async findOne(id: number) {
-    const category = await this.prismService.category.findUnique({where: {id: id}})
+    const category = await this.prismService.category.findUnique({
+      where: {id: id},
+      include: {
+        courses: {
+          select: {
+            image: true,
+            title: true,
+            descr: true,
+          }
+        }
+      }
+    })
     if(!category){
       throw new HttpException('No category', HttpStatus.NOT_FOUND)
     }

@@ -7,4 +7,5 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     descr:  string
     author?: string
     amount?: number
+    categoryId?: number
 }

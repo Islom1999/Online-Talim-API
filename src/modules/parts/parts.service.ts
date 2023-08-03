@@ -14,7 +14,20 @@ export class PartsService {
   }
 
   async findAll() {
-    const part = await this.prismaService.part.findMany()
+    const part = await this.prismaService.part.findMany({
+      include:{
+        course: {
+          select:{
+            title: true
+          }
+        },
+        lessons: {
+          select:{
+            title: true
+          }
+        }
+      }
+    })
     if(!part[0]){
       throw new HttpException('No parts found', HttpStatus.NOT_FOUND)
     }
@@ -22,7 +35,21 @@ export class PartsService {
   }
 
   async findOne(id: number) {
-    const part = await this.prismaService.part.findUnique({where: {id}})
+    const part = await this.prismaService.part.findUnique({ 
+      where: {id},
+      include:{
+        course: {
+          select:{
+            title: true
+          }
+        },
+        lessons: {
+          select:{
+            title: true
+          }
+        }
+      }
+    })
     if(!part){
       throw new HttpException('No part found', HttpStatus.NOT_FOUND)
     }

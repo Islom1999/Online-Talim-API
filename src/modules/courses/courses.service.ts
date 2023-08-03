@@ -14,7 +14,20 @@ export class CoursesService {
   }
 
   async findAll() {
-    const course = await this.prismaService.course.findMany()
+    const course = await this.prismaService.course.findMany({
+      include: {
+        category: {
+          select: {
+            title: true
+          },
+        },
+        parts: {
+          select: {
+            title: true
+          }
+        }
+      }
+    })
     if(!course[0]){
       throw new HttpException('No courses', HttpStatus.NOT_FOUND)
     }
@@ -22,7 +35,21 @@ export class CoursesService {
   }
 
   async findOne(id: number) {
-    const course = await this.prismaService.course.findUnique({where: {id}})
+    const course = await this.prismaService.course.findUnique({
+      where: {id}, 
+      include: {
+        category: {
+          select: {
+            title: true
+          },
+        },
+        parts: {
+          select: {
+            title: true
+          }
+        }
+      }
+    })
     if(!course){
       throw new HttpException('No course', HttpStatus.NOT_FOUND)
     }

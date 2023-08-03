@@ -5,4 +5,5 @@ export class UpdateLessonDto extends PartialType(CreateLessonDto) {
     video: string;
     title: string;
     descr: string;
+    partId?: number;
 }
