@@ -6,6 +6,6 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     title:  string 
     descr:  string
     author?: string
-    amount?: number
-    categoryId?: number
+    amount?: number | string
+    categoryId?: number | string
 }

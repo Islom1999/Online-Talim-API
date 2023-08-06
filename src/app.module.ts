@@ -8,9 +8,22 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { PartsModule } from './modules/parts/parts.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, PrismaModule, LessonsModule, PartsModule, CoursesModule, CategoriesModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), 
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, 'uploads')
+    }),
+    AuthModule, 
+    PrismaModule, 
+    LessonsModule, 
+    PartsModule, 
+    CoursesModule, 
+    CategoriesModule,
+  ],
   providers: [
     {
       provide: APP_GUARD,

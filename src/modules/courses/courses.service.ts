@@ -8,8 +8,21 @@ export class CoursesService {
 
   constructor(private prismaService: PrismaService){}
 
-  async create(createCourseDto: CreateCourseDto) {
-    const course = await this.prismaService.course.create({data: createCourseDto})
+  async create(createCourseDto: CreateCourseDto, image: Express.Multer.File) {
+    let imageUrl:string
+    if(image){
+      imageUrl = image.filename
+    }
+    const course = await this.prismaService.course.create({
+      data: {
+        title: createCourseDto.title, 
+        descr: createCourseDto.descr,
+        author: createCourseDto.author,
+        amount: +createCourseDto.amount,
+        categoryId: +createCourseDto.categoryId,
+        image: imageUrl
+      }
+    }) 
     return {code: 201, data: course};
   }
 
@@ -56,8 +69,22 @@ export class CoursesService {
     return {code: 200, data: course};
   }
 
-  async update(id: number, updateCourseDto: UpdateCourseDto) {
-    const course = await this.prismaService.course.update({where: {id}, data: updateCourseDto})
+  async update(id: number, updateCourseDto: UpdateCourseDto, image: Express.Multer.File) {
+    let imageUrl:string
+    if(image){
+      imageUrl = image.filename
+    }
+    const course = await this.prismaService.course.update({
+      where: {id}, 
+      data: {
+        title: updateCourseDto.title, 
+        descr: updateCourseDto.descr,
+        author: updateCourseDto.author,
+        amount: +updateCourseDto.amount,
+        categoryId: +updateCourseDto.categoryId,
+        image: imageUrl
+      }
+    })
     return {code: 200, data: course};
   }
 

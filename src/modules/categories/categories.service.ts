@@ -8,10 +8,16 @@ export class CategoriesService {
 
   constructor(private prismService: PrismaService){}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    const category = await this.prismService.category.create({data: createCategoryDto})
+  async create(createCategoryDto: CreateCategoryDto, image: Express.Multer.File) {
+    let imageUrl:string
+    if(image){
+      imageUrl = image.filename
+    }
+    const category = await this.prismService.category.create({
+      data: {...createCategoryDto, image: imageUrl}
+    });
     return {code: 201, data: category};
-  }
+  } 
 
   async findAll() {
     const category = await this.prismService.category.findMany({
@@ -50,15 +56,21 @@ export class CategoriesService {
     return {code: 200, data: category};
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    const category = await this.prismService.category.update({where: {id: id}, data: updateCategoryDto})
+  async update(id: number, updateCategoryDto: UpdateCategoryDto, image: Express.Multer.File) {
+    let imageUrl:string
+    if(image){
+      imageUrl = image.filename
+    }
+    const category = await this.prismService.category.update({
+      where: {id: id}, 
+      data: {...updateCategoryDto, image: imageUrl}
+    })
 
     return {code: 200, data: category};
   }
 
   async remove(id: number) {
     const category = await this.prismService.category.delete({where: {id: id}})
-    
-    return {code: 200, data: category};
+    return {code: 200, data: category}; 
   }
 }
