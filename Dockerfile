@@ -12,9 +12,9 @@ RUN npm run build
 # Yaratgan faylni Docker konteyneriga nusxalash
 COPY init-prisma.sh .  
 # Faylga ijro huquqini berish
-RUN chmod +x init-prisma.sh  
+RUN chmod +x /islom/src/app/init-prisma.sh  
 # Prisma migratsiyalarini bajarish
-RUN ./init-prisma.sh  
+RUN /islom/src/app/init-prisma.sh  
 
 RUN npx prisma generate
 
