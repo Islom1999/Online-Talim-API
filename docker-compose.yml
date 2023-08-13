@@ -1,13 +1,12 @@
 version: '3.8'
 services:
-  db:
-    image: postgres:13
-    container_name: postgres-online-talim
+  app: 
+    build: './' 
+    image: online-talim
+    container_name: online-talim
     restart: always
     ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: onlinetalim
+      - 6000:3000
+    env_file:
+      - .env
   
