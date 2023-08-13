@@ -9,14 +9,15 @@ COPY . .
 RUN npm i
 RUN npm run build
 
-RUN npx prisma generate
-
 # Yaratgan faylni Docker konteyneriga nusxalash
 COPY init-prisma.sh .  
 # Faylga ijro huquqini berish
 RUN chmod +x init-prisma.sh  
 # Prisma migratsiyalarini bajarish
 RUN ./init-prisma.sh  
+
+RUN npx prisma generate
+
 
 EXPOSE 3000
 
