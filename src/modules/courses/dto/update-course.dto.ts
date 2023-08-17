@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCourseDto } from './create-course.dto';
+import { PaymentType } from '@prisma/client';
 
 export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     image:  string
@@ -8,4 +9,5 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     author?: string
     amount?: number | string
     categoryId?: number | string
+    paymentType: PaymentType
 }

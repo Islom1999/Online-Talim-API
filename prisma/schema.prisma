@@ -33,6 +33,10 @@ model UserCourse {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
+  paymentType       PaymentType
+  subscriptionStart DateTime?
+  subscriptionEnd   DateTime?
+
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
@@ -65,6 +69,15 @@ model Category {
   @@map("categories")
 }
 
+
+enum PaymentType {
+  Free           // tekin
+  OneTime        // umrbod foydalanish
+  Monthly        // 1 oylik kurs
+  ThreeMonth     // 3 oylik kurs
+  SixMonth       // 6 oylik kurs
+}
+
 model Course {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -75,6 +88,8 @@ model Course {
   descr  String
   author String?
   amount Int?
+
+  paymentType       PaymentType
 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?

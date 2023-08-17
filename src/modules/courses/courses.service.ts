@@ -10,17 +10,27 @@ export class CoursesService {
 
   async create(createCourseDto: CreateCourseDto, image: Express.Multer.File) {
     let imageUrl:string
+    createCourseDto.amount = +createCourseDto.amount
     if(image){
       imageUrl = image.filename
     }
+    if(createCourseDto.paymentType == 'Free'){
+      createCourseDto.amount = 0
+    }
+    else{
+      if( createCourseDto.amount <= 0 ){
+        throw new HttpException('pullik kursda amount = 0 bo\'lishi mumkinmas', HttpStatus.BAD_REQUEST )
+      }
+    }
     const course = await this.prismaService.course.create({
       data: {
+        image: imageUrl, 
         title: createCourseDto.title, 
         descr: createCourseDto.descr,
         author: createCourseDto.author,
-        amount: +createCourseDto.amount,
+        amount: createCourseDto.amount,
         categoryId: +createCourseDto.categoryId,
-        image: imageUrl
+        paymentType: createCourseDto.paymentType,
       }
     }) 
     return {code: 201, data: course};
@@ -74,15 +84,24 @@ export class CoursesService {
     if(image){
       imageUrl = image.filename
     }
+    if(updateCourseDto.paymentType == 'Free'){
+      updateCourseDto.amount = 0
+    }
+    else{
+      if( +updateCourseDto.amount <= 0 ){
+        throw new HttpException('pullik kursda amount = 0 bo\'lishi mumkinmas', HttpStatus.BAD_REQUEST )
+      }
+    }
     const course = await this.prismaService.course.update({
       where: {id}, 
       data: {
+        image: imageUrl,
         title: updateCourseDto.title, 
         descr: updateCourseDto.descr,
         author: updateCourseDto.author,
         amount: +updateCourseDto.amount,
         categoryId: +updateCourseDto.categoryId,
-        image: imageUrl
+        paymentType: updateCourseDto.paymentType,
       }
     })
     return {code: 200, data: course};
