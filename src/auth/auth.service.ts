@@ -9,6 +9,7 @@ import { AuthDto } from './dto';
 import { JwtPayload, Tokens } from './types';
 import { SigninDto } from './dto/signin.dto';
 import { Role } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +32,11 @@ export class AuthService {
         },
       })
       .catch((error) => {
-        // if (error instanceof PrismaClientKnownRequestError) {
-        //   if (error.code === 'P2002') {
-        //     throw new ForbiddenException('Credentials incorrect');
-        //   }
-        // }
+        if (error instanceof PrismaClientKnownRequestError) {
+          if (error.code === 'P2002') {
+            throw new ForbiddenException('User already logged in');
+          }
+        }
         throw error;
       });
 

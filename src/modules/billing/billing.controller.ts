@@ -22,28 +22,16 @@ export class BillingController {
     return this.billingService.createBillingFree(+id, userId);
   }
 
-  // @Post()
-  // create(@Body() createBillingDto: CreateBillingDto) {
-  //   return this.billingService.create(createBillingDto);
-  // }
+  // admin add billing course
+  @HttpCode(200)
+  @Roles('Admin')
+  @UseGuards(RolesGuard)
+  @Post('create/admin')
+  createBillingAdmin(
+    @Body() createBillingDto: CreateBillingDto
+  ) {
+    return this.billingService.createBillingAdmin(createBillingDto);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.billingService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.billingService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateBillingDto: UpdateBillingDto) {
-  //   return this.billingService.update(+id, updateBillingDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.billingService.remove(+id);
-  // }
+  
 }

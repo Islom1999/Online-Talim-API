@@ -26,23 +26,55 @@ export class BillingService {
     return {status: 'ok', msg: "Kursga obuna bo'lindi", data: userCourse};
   }
 
-  // create(createBillingDto: CreateBillingDto) {
-  //   return 'This action adds a new billing';
-  // }
+  async createBillingAdmin(createBillingdto:CreateBillingDto) { 
+    const {userId, courseId} = createBillingdto
 
-  // findAll() {
-  //   return `This action returns all billing`;
-  // }
+    const dateStart = createBillingdto.dateStart ? createBillingdto.dateStart : new Date()
+    const dateEnd = new Date()
+    let userCourse
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} billing`;
-  // }
+    const user = await this.prismaService.user.findUnique({where: {id: userId}});
+    if(! user ){
+      throw new HttpException('unday user topilmadi', HttpStatus.NOT_FOUND)
+    } 
 
-  // update(id: number, updateBillingDto: UpdateBillingDto) {
-  //   return `This action updates a #${id} billing`;
-  // }
+    const course = await this.prismaService.course.findUnique({where: {id: courseId}});
+    if(! course ){
+      throw new HttpException('unday kurs topilmadi', HttpStatus.NOT_FOUND)
+    }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} billing`;
-  // }
+    if(course.paymentType == 'Free' || course.paymentType == 'OneTime'){
+      userCourse = await this.prismaService.userCourse.create({
+        data: {
+          paymentType: course.paymentType,  
+          userId, 
+          courseId
+        }
+      })
+      .catch((err) => {
+        throw new HttpException('user kursga biriktirilgan', HttpStatus.BAD_REQUEST)
+      })
+    }else{
+      switch(course.paymentType){
+        case 'Monthly': dateEnd.setMonth(+dateEnd.getMonth() + 1); break;
+        case 'TwoMonth': dateEnd.setMonth(+dateEnd.getMonth() + 2); break;
+        case 'ThreeMonth': dateEnd.setMonth(+dateEnd.getMonth() + 3); break;
+        case 'SixMonth': dateEnd.setMonth(+dateEnd.getMonth() + 6); break;
+        case 'NineMonth': dateEnd.setMonth(+dateEnd.getMonth() + 9); break;
+        case 'OneYear': dateEnd.setMonth(+dateEnd.getMonth() + 12); break; 
+      }
+      userCourse = await this.prismaService.userCourse.create({
+        data: {
+          paymentType: course.paymentType, 
+          userId, 
+          courseId,
+          dateStart,
+          dateEnd,
+        }
+      })
+    }
+    return {status: 'ok', msg: "Userga kurs qo'shildi", data: userCourse};
+  }
+
+  
 }

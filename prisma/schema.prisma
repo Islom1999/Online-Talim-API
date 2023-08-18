@@ -34,8 +34,8 @@ model UserCourse {
   createdAt DateTime @default(now())
 
   paymentType       PaymentType
-  subscriptionStart DateTime?
-  subscriptionEnd   DateTime?
+  dateStart DateTime?
+  dateEnd   DateTime?
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
@@ -71,11 +71,14 @@ model Category {
 
 
 enum PaymentType {
-  Free           // tekin
-  OneTime        // umrbod foydalanish
-  Monthly        // 1 oylik kurs
-  ThreeMonth     // 3 oylik kurs
-  SixMonth       // 6 oylik kurs
+  Free            // tekin
+  OneTime         // umrbod foydalanish
+  Monthly         // 1 oylik kurs
+  TwoMonth        // 2 oylik kurs
+  ThreeMonth      // 3 oylik kurs
+  SixMonth        // 6 oylik kurs
+  NineMonth       // 9 oylik kurs
+  OneYear         // 12 oylik kurs
 }
 
 model Course {
