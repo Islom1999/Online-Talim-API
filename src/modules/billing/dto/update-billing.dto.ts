@@ -1,4 +1,5 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBillingDto } from './create-billing.dto';
 
-export class UpdateBillingDto extends PartialType(CreateBillingDto) {}
+export class UpdateBillingDto {
+    userCourseId: number;
+    dateEnd: Date;   // kursni uzaytirish uchun
+}

@@ -2,11 +2,29 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBillingDto } from './dto/create-billing.dto';
 import { UpdateBillingDto } from './dto/update-billing.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BilingQuery } from './dto/query.dto';
 
 @Injectable()
 export class BillingService {
 
   constructor(private prismaService: PrismaService){}
+
+  async getAllBilling(bilingQuery: BilingQuery) { 
+
+    const userCourse = await this.prismaService.userCourse.findMany({
+      where: {
+        id: bilingQuery.id ? +bilingQuery.id : undefined,
+        userId: bilingQuery.userId ? +bilingQuery.userId : undefined,
+        courseId: bilingQuery.courseId ? +bilingQuery.courseId : undefined
+      }
+    })
+
+    if(!userCourse[0]){
+      throw new HttpException('malumotlar topilmadi', HttpStatus.NOT_FOUND)
+    }
+
+    return {status: 'ok', msg: "malumotlar topildi", data: userCourse};
+  }
   
   async createBillingFree(id:number, userId:number) {
     const cource = await this.prismaService.course.findUnique({where: {id}});
@@ -76,5 +94,28 @@ export class BillingService {
     return {status: 'ok', msg: "Userga kurs qo'shildi", data: userCourse};
   }
 
+  async updateBillingAdmin(updateBillingDto:UpdateBillingDto) { 
+    const {dateEnd, userCourseId} = updateBillingDto
+
+    const userCourse = await this.prismaService.userCourse.update({
+      where: {id: userCourseId},
+      data: {
+        dateEnd
+      }
+      })
+
+    return {status: 'ok', msg: "Userga kurs tugash vaqti o'zgardi", data: userCourse};
+  }
+
+  async deleteBilingAdmin(id:number) { 
+    const userCourse = await this.prismaService.userCourse.delete({where: {id: id},})
+    if(!userCourse){
+      throw new HttpException('unday kurs topilmadi', HttpStatus.NOT_FOUND)
+    }
+    return {status: 'ok', msg: "Userga kursi o'chirildi", data: userCourse};
+  }
+
+  
+ 
   
 }

@@ -16,7 +16,7 @@ export class ProfileController {
   ) {}
 
   @HttpCode(200)
-  @Roles('Admin')
+  @Roles('User')
   @UseGuards(RolesGuard)
   @Get()
   findOne(@GetCurrentUserId() id: number,) {
@@ -24,7 +24,7 @@ export class ProfileController {
   }
 
   @HttpCode(200)
-  @Roles('Admin')
+  @Roles('User')
   @UseGuards(RolesGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -45,7 +45,7 @@ export class ProfileController {
   }
 
   @HttpCode(200)
-  @Roles('Admin')
+  @Roles('User')
   @UseGuards(RolesGuard)
   @Patch('password')
   changePassword(
@@ -53,5 +53,15 @@ export class ProfileController {
     @GetCurrentUserId() id: number
   ) {
     return this.profileService.changePassword(id, changePasswordDto);
+  }
+
+  @HttpCode(200)
+  @Roles('User')
+  @UseGuards(RolesGuard)
+  @Get('courses')
+  getUserCourses(
+    @GetCurrentUserId() id: number
+  ) {
+    return this.profileService.getUserCourses(id);
   }
 }

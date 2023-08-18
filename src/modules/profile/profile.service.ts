@@ -60,4 +60,19 @@ export class ProfileService {
 
     return {code: 200, data: changedPasswordUser, message: "User Chanege password successfully"}; 
   }
+
+  async getUserCourses(id: number) {
+    const user = await this.prismService.user.findMany({
+      where: {id: id}, 
+      select: {
+        id: true,
+        fullname: true,
+        courses: true
+      }
+    })    
+
+    return {code: 200, data: user};
+  }
+
+  
 }
