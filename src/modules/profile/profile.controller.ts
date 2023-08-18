@@ -16,7 +16,7 @@ export class ProfileController {
   ) {}
 
   @HttpCode(200)
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @Get()
   findOne(@GetCurrentUserId() id: number,) {
@@ -24,7 +24,7 @@ export class ProfileController {
   }
 
   @HttpCode(200)
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -45,7 +45,7 @@ export class ProfileController {
   }
 
   @HttpCode(200)
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @Patch('password')
   changePassword(

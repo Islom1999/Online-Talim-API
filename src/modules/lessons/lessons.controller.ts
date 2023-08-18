@@ -10,7 +10,7 @@ import { Public } from 'src/common/decorators';
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @HttpCode(201)
   @Post()
@@ -31,7 +31,7 @@ export class LessonsController {
     return this.lessonsService.findOne(+id);
   }
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @HttpCode(200)
   @Patch(':id')
@@ -39,7 +39,7 @@ export class LessonsController {
     return this.lessonsService.update(+id, updateLessonDto);
   }
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @HttpCode(200)
   @Delete(':id')

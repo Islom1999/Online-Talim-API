@@ -14,7 +14,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @HttpCode(201)
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -48,7 +48,7 @@ export class CoursesController {
   }
 
   @HttpCode(200)
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -69,7 +69,7 @@ export class CoursesController {
   }
 
   @HttpCode(200) 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {

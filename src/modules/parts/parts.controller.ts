@@ -10,7 +10,7 @@ import { Public } from 'src/common/decorators';
 export class PartsController {
   constructor(private readonly partsService: PartsService) {}
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @HttpCode(201)
   @Post()
@@ -32,7 +32,7 @@ export class PartsController {
     return this.partsService.findOne(+id);
   }
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)  
   @HttpCode(200)
   @Patch(':id')
@@ -40,7 +40,7 @@ export class PartsController {
     return this.partsService.update(+id, updatePartDto);
   }
 
-  @Roles('User')
+  @Roles('Admin')
   @UseGuards(RolesGuard)
   @HttpCode(200)
   @Delete(':id')
