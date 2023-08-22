@@ -2,10 +2,10 @@ name: Test CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
-  SERVER_HOST: 3.76.103.210
+  SERVER_HOST: 65.2.129.94
   SERVER_USERNAME: ubuntu
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
