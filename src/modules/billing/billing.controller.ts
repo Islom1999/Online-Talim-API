@@ -6,7 +6,9 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { BilingQuery } from './dto/query.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('billing')
 @Controller('billing')
 export class BillingController {
   constructor(private readonly billingService: BillingService) {}

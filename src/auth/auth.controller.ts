@@ -14,7 +14,9 @@ import { AuthDto, } from './dto';
 import { Tokens } from './types';
 import { SigninDto } from './dto/signin.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('billing')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

@@ -5,7 +5,9 @@ import { UpdatePartDto } from './dto/update-part.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards';
 import { Public } from 'src/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('parts')
 @Controller('part')
 export class PartsController {
   constructor(private readonly partsService: PartsService) {}

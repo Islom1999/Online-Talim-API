@@ -5,7 +5,9 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { RolesGuard } from 'src/common/guards';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Public } from 'src/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('lessons')
 @Controller('lesson')
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}

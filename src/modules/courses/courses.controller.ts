@@ -8,7 +8,9 @@ import { Public } from 'src/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file.upload';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('courses')
 @Controller('course')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}

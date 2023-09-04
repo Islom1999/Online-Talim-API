@@ -8,7 +8,9 @@ import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file.upload';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('profile')
 @Controller('profile')
 export class ProfileController {
   constructor(
