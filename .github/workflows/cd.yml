@@ -28,4 +28,4 @@ jobs:
           npx prisma migrate dev
           npx prisma generate
           npm run build
-          pm2 start dist/main.js --name talim-app
+          pm2 restart talim-app
