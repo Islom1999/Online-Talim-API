@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BillingService } from './billing.service';
 import { BillingController } from './billing.controller';
-import { SharedModule } from 'src/common/shared/sharedModule';
+import { SharedModule } from 'src/common/filter/sharedModule';
 
 @Module({
   controllers: [BillingController],

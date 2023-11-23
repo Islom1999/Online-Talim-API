@@ -10,7 +10,6 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { ProfileModule } from './modules/profile/profile.module';
 import { BillingModule } from './modules/billing/billing.module';
 
 @Module({
@@ -24,7 +23,8 @@ import { BillingModule } from './modules/billing/billing.module';
     LessonsModule, 
     PartsModule, 
     CoursesModule, 
-    CategoriesModule, ProfileModule, BillingModule,
+    CategoriesModule,
+    BillingModule,
   ],
   providers: [
     {

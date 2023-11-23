@@ -1,18 +1,34 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AtStrategy, RtStrategy } from './strategies';
-import { SharedModule } from 'src/common/shared/sharedModule';
+import { AuthController } from './auth.controller';
+import {
+  AtStrategy,
+  FacebookStrategy,
+  RtStrategy,
+  GoogleStrategy,
+} from './strategies';
+import { JwtModule } from '@nestjs/jwt';
+import { BaseModule } from 'src/base/module/baseModule';
+import { ClientModule } from './client/client.module';
+import { AdminModule } from './admin/admin.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RtStrategy],
-  imports: [
-    JwtModule.register({}),
-    SharedModule,
+  providers: [
+    AuthService,
+    RtStrategy,
+    AtStrategy,
+    GoogleStrategy,
+    FacebookStrategy,
   ],
+  controllers: [AuthController],
+  imports: [
+    PrismaModule,
+    JwtModule.register({}),
+    BaseModule,
+    ClientModule,
+    AdminModule,
+  ],
+  exports: [],
 })
-
 export class AuthModule {}

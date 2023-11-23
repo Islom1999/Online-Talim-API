@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { RolesGuard } from 'src/common/guards';
 import { Public } from 'src/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,10 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @HttpCode(201)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
-  @UseInterceptors(
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors( 
     FileInterceptor('image', {
       storage: diskStorage({
         destination: './uploads',
@@ -35,23 +31,21 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto, image);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Get()
   findAll() {
     return this.categoriesService.findAll();
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+    return this.categoriesService.findOne(id);
   }
 
-  @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -67,14 +61,12 @@ export class CategoriesController {
     @Body() updateCategoryDto: UpdateCategoryDto,
     @UploadedFile() image: Express.Multer.File
   ) {
-    return this.categoriesService.update(+id, updateCategoryDto, image);
+    return this.categoriesService.update(id, updateCategoryDto, image);
   }
 
-  @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoriesService.remove(+id);
+    return this.categoriesService.remove(id);
   }
 }

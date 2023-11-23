@@ -1,23 +1,30 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { PaymentType } from "@prisma/client"
+import { IsNotEmpty, IsString } from "class-validator"
 
 export class CreateCourseDto {
     @ApiProperty({
         type: String,
         description: "Image file",
     })
+    @IsNotEmpty()
+    @IsString()
     image:  string
 
     @ApiProperty({
         type: String,
         description: "Title",
     })
+    @IsNotEmpty()
+    @IsString()
     title:  string 
 
     @ApiProperty({
         type: String,
         description: "Description",
     })
+    @IsNotEmpty()
+    @IsString()
     descr:  string
 
     @ApiProperty({
@@ -25,6 +32,8 @@ export class CreateCourseDto {
         description: "Author",
         required: false
     })
+    @IsNotEmpty()
+    @IsString()
     author?: string
 
     @ApiProperty({
@@ -32,6 +41,8 @@ export class CreateCourseDto {
         description: "Amount number and string",
         required: false
     })
+    @IsNotEmpty()
+    @IsString()
     amount?: string|number      // numberString
 
     @ApiProperty({
@@ -39,11 +50,15 @@ export class CreateCourseDto {
         description: "Description",
         required: false
     })
-    categoryId?: string|number  // numberString
+    @IsNotEmpty()
+    @IsString()
+    categoryId?: string  // numberString
 
     @ApiProperty({
         type: String,
         description: "Payment type ",
     })
+    @IsNotEmpty()
+    @IsString()
     paymentType: PaymentType
 }

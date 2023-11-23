@@ -3,6 +3,7 @@ deploy.docs.txt
 .env.test
 
 # compiled output
+/uploads
 /dist
 /node_modules
 

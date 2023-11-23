@@ -34,7 +34,7 @@ export class PartsService {
     return {status: 200, data: part};
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const part = await this.prismaService.part.findUnique({ 
       where: {id},
       include:{
@@ -56,12 +56,12 @@ export class PartsService {
     return {status: 200, data: part};
   }
 
-  async update(id: number, updatePartDto: UpdatePartDto) {
+  async update(id: string, updatePartDto: UpdatePartDto) {
     const part = await this.prismaService.part.update({where: {id}, data: updatePartDto})
     return {status: 200, data: part};
   } 
 
-  async remove(id: number) {
+  async remove(id: string) {
     const part = await this.prismaService.part.delete({where: {id}})
     return {status: 200, data: part};
   }

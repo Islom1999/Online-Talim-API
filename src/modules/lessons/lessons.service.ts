@@ -28,7 +28,7 @@ export class LessonsService {
     return {status: 200, data: lesson};
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const lesson = await this.prismaService.lesson.findUnique({
       where: {id: id},
       include:{
@@ -45,12 +45,12 @@ export class LessonsService {
     return {status: 200, data: lesson};
   }
 
-  async update(id: number, updateLessonDto: UpdateLessonDto) {
+  async update(id: string, updateLessonDto: UpdateLessonDto) {
     const lesson = await this.prismaService.lesson.update({where: {id: id}, data: updateLessonDto})
     return {status: 200, data: lesson};
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const lesson = await this.prismaService.lesson.delete({where: {id: id}})
     return {status: 200, data: lesson};
   }

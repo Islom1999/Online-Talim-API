@@ -27,13 +27,13 @@ export class CoursesService {
         image: imageUrl, 
         title: createCourseDto.title, 
         descr: createCourseDto.descr,
-        author: createCourseDto.author,
+        authorName: createCourseDto.author,
         amount: createCourseDto.amount,
-        categoryId: +createCourseDto.categoryId,
+        categoryId: createCourseDto.categoryId,
         paymentType: createCourseDto.paymentType,
       }
     }) 
-    return {code: 201, data: course};
+    return course; 
   }
 
   async findAll() {
@@ -54,10 +54,10 @@ export class CoursesService {
     if(!course[0]){
       throw new HttpException('No courses', HttpStatus.NOT_FOUND)
     }
-    return {code: 200, data: course};
+    return course;
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const course = await this.prismaService.course.findUnique({
       where: {id}, 
       include: {
@@ -76,10 +76,10 @@ export class CoursesService {
     if(!course){
       throw new HttpException('No course', HttpStatus.NOT_FOUND)
     }
-    return {code: 200, data: course};
+    return course;
   }
 
-  async update(id: number, updateCourseDto: UpdateCourseDto, image: Express.Multer.File) {
+  async update(id: string, updateCourseDto: UpdateCourseDto, image: Express.Multer.File) {
     let imageUrl:string
     if(image){
       imageUrl = image.filename
@@ -98,17 +98,17 @@ export class CoursesService {
         image: imageUrl,
         title: updateCourseDto.title, 
         descr: updateCourseDto.descr,
-        author: updateCourseDto.author,
+        authorName: updateCourseDto.author,
         amount: +updateCourseDto.amount,
-        categoryId: +updateCourseDto.categoryId,
+        categoryId: updateCourseDto.categoryId,
         paymentType: updateCourseDto.paymentType,
       }
     })
-    return {code: 200, data: course};
+    return course;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const course = await this.prismaService.course.delete({where: {id}})
-    return {code: 200, data: course};
+    return course;
   }
 }

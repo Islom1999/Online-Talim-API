@@ -1,23 +1,30 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { IsDate, IsNotEmpty, IsString } from "class-validator"
 
 export class CreateBillingDto {
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "user id number",
     })
-    userId: number
+    @IsNotEmpty()
+    @IsString()
+    userId: string
 
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "curse id number",
     })
-    courseId: number
+    @IsNotEmpty()
+    @IsString()
+    courseId: string
 
     @ApiProperty({
         type: Date,
         description: "Date",
         required: false,
     })
+    @IsDate()
+    @IsString()
     dateStart? : Date   // kiritish majburiy emas
 }
 

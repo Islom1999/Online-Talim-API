@@ -2,8 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards,
 import { BillingService } from './billing.service';
 import { CreateBillingDto } from './dto/create-billing.dto';
 import { UpdateBillingDto } from './dto/update-billing.dto';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { RolesGuard } from 'src/common/guards';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { BilingQuery } from './dto/query.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,8 +13,7 @@ export class BillingController {
 
   // users courses filte all
   @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @Get()
   getAllBilling(
     @Query() bilingQuery: BilingQuery
@@ -26,20 +23,17 @@ export class BillingController {
 
   // users billing free course
   @HttpCode(200)
-  @Roles('User')
-  @UseGuards(RolesGuard)
   @Post(':id')
   createBillingFree(
     @Param('id') id: string,
-    @GetCurrentUserId() userId: number
+    @GetCurrentUserId() userId: string
   ) {
-    return this.billingService.createBillingFree(+id, userId);
+    return this.billingService.createBillingFree(id, userId);
   }
 
   // admin add billing course
   @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @Post('create/admin')
   createBillingAdmin(
     @Body() createBillingDto: CreateBillingDto
@@ -49,8 +43,7 @@ export class BillingController {
 
   // admin update billing course - kursni uzaytirish
   @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @Post('update/admin')
   updateBillingAdmin(
     @Body() updateBillingDto: UpdateBillingDto
@@ -60,13 +53,12 @@ export class BillingController {
 
   // admin delete billing course
   @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @Post('delete/:id')
   deleteBilingAdmin(
-    @Param('id') id: string |number
+    @Param('id') id: string 
   ) {
-    return this.billingService.deleteBilingAdmin(+id);
+    return this.billingService.deleteBilingAdmin(id);
   }
   
 }

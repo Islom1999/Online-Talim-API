@@ -3,7 +3,7 @@ name: Build, Push, and Deploy Docker Image
 on:
   push:
     branches:
-      - main
+      - any
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

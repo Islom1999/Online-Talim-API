@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { RolesGuard } from 'src/common/guards';
 import { Public } from 'src/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,9 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
-  @HttpCode(201)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -35,23 +31,21 @@ export class CoursesController {
     return this.coursesService.create(createCourseDto, image);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Get()
   findAll() {
     return this.coursesService.findAll();
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+    return this.coursesService.findOne(id);
   }
 
-  @HttpCode(200)
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -67,14 +61,12 @@ export class CoursesController {
     @Body() updateCourseDto: UpdateCourseDto,
     @UploadedFile() image: Express.Multer.File
   ) {
-    return this.coursesService.update(+id, updateCourseDto, image);
+    return this.coursesService.update(id, updateCourseDto, image);
   }
 
-  @HttpCode(200) 
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.OK) 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+    return this.coursesService.remove(id);
   }
 }

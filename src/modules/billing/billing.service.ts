@@ -13,9 +13,9 @@ export class BillingService {
 
     const userCourse = await this.prismaService.userCourse.findMany({
       where: {
-        id: bilingQuery.id ? +bilingQuery.id : undefined,
-        userId: bilingQuery.userId ? +bilingQuery.userId : undefined,
-        courseId: bilingQuery.courseId ? +bilingQuery.courseId : undefined
+        id: bilingQuery.id ? bilingQuery.id : null,
+        clientId: bilingQuery.userId ? bilingQuery.userId : null,
+        courseId: bilingQuery.courseId ? bilingQuery.courseId : undefined
       }
     })
 
@@ -26,7 +26,7 @@ export class BillingService {
     return {status: 'ok', msg: "malumotlar topildi", data: userCourse};
   }
   
-  async createBillingFree(id:number, userId:number) {
+  async createBillingFree(id:string, userId:string) {
     const cource = await this.prismaService.course.findUnique({where: {id}});
     if(! cource ){
       throw new HttpException('unday kurs topilmadi', HttpStatus.NOT_FOUND)
@@ -37,7 +37,7 @@ export class BillingService {
     const userCourse = await this.prismaService.userCourse.create({
       data: {
         paymentType: 'Free', 
-        userId, 
+        clientId: userId, 
         courseId: id
       }
     })
@@ -65,7 +65,7 @@ export class BillingService {
       userCourse = await this.prismaService.userCourse.create({
         data: {
           paymentType: course.paymentType,  
-          userId, 
+          clientId: userId, 
           courseId
         }
       })
@@ -84,7 +84,7 @@ export class BillingService {
       userCourse = await this.prismaService.userCourse.create({
         data: {
           paymentType: course.paymentType, 
-          userId, 
+          clientId: userId, 
           courseId,
           dateStart,
           dateEnd,
@@ -107,7 +107,7 @@ export class BillingService {
     return {status: 'ok', msg: "Userga kurs tugash vaqti o'zgardi", data: userCourse};
   }
 
-  async deleteBilingAdmin(id:number) { 
+  async deleteBilingAdmin(id:string) { 
     const userCourse = await this.prismaService.userCourse.delete({where: {id: id},})
     if(!userCourse){
       throw new HttpException('unday kurs topilmadi', HttpStatus.NOT_FOUND)

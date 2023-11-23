@@ -1,22 +1,29 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { IsNotEmpty, IsString } from "class-validator"
 
 export class BilingQuery {
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "user id number",
     })
-    userId: number
+    @IsNotEmpty()
+    @IsString()
+    userId: string
 
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "curse id number",
     })
-    courseId: number
+    @IsNotEmpty()
+    @IsString()
+    courseId: string
 
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "order id number",
     })
-    id: number
+    @IsNotEmpty()
+    @IsString()
+    id: string
 }
 

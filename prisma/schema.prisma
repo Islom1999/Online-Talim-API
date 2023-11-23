@@ -11,57 +11,65 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String?
+  hash      String
+  hashedRt  String?
+  isBlock   Boolean  @default(false)
+  image     String?
+  phone     String?
 
-  image    String?
-  email    String  @unique
-  fullname String
-  phone    String?
-  hash     String
-  hashedRt String?
+  role    role?   @relation(fields: [role_id], references: [id])
+  role_id String?
 
-  roles   Role[]       @default([User])
-  courses UserCourse[]
+  Course Course[]
 
   @@map("users")
 }
 
-// many to many, relation - user <=> course
-model UserCourse {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-
-  paymentType       PaymentType
-  dateStart DateTime?
-  dateEnd   DateTime?
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  course   Course @relation(fields: [courseId], references: [id])
-  courseId Int
-
-  @@unique([userId, courseId])
-}
-
-enum Role {
-  Admin
-  User
-  Teacher
-  StarAdmin
+model role {
+  id          String       @id @default(dbgenerated("gen_random_uuid()"))
+  title       String       @unique
+  permissions Permission[] @default([product_view])
+  User        User[]
 
   @@map("roles")
 }
 
+enum Permission {
+  product_create
+  product_view
+  product_update
+  product_delete
+
+  order_create
+  order_view
+  order_update
+  order_delete
+
+  user_create
+  user_view
+  user_update
+  user_delete
+
+  role_create
+  role_view
+  role_update
+  role_delete
+
+  @@map("permissions")
+}
+
 model Category {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   image String?
-  title String  
+  title String
   descr String?
 
   courses Course[]
@@ -69,33 +77,35 @@ model Category {
   @@map("categories")
 }
 
-
 enum PaymentType {
-  Free            // tekin
-  OneTime         // umrbod foydalanish
-  Monthly         // 1 oylik kurs
-  TwoMonth        // 2 oylik kurs
-  ThreeMonth      // 3 oylik kurs
-  SixMonth        // 6 oylik kurs
-  NineMonth       // 9 oylik kurs
-  OneYear         // 12 oylik kurs
+  Free // tekin
+  OneTime // umrbod foydalanish
+  Monthly // 1 oylik kurs
+  TwoMonth // 2 oylik kurs
+  ThreeMonth // 3 oylik kurs
+  SixMonth // 6 oylik kurs
+  NineMonth // 9 oylik kurs
+  OneYear // 12 oylik kurs
 }
 
 model Course {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  image  String
-  title  String 
-  descr  String
-  author String?
-  amount Int?
+  image      String
+  title      String
+  descr      String
+  authorName String?
+  amount     Int?
 
-  paymentType       PaymentType
+  paymentType PaymentType
 
   category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?
+  categoryId String?
+
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
 
   parts   Part[]
   viewers UserCourse[]
@@ -104,31 +114,98 @@ model Course {
 }
 
 model Part {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 
-  title String 
+  title String
   descr String?
 
   course   Course?  @relation(fields: [courseId], references: [id])
-  courseId Int?
+  courseId String?
   lessons  Lesson[]
 
-  @@map("parts") 
+  @@map("parts")
 }
 
 model Lesson {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   video String?
-  title String  
+  title String
   descr String?
 
-  part   Part? @relation(fields: [partId], references: [id])
-  partId Int?
+  part   Part?   @relation(fields: [partId], references: [id])
+  partId String?
 
-  @@map("lessons") 
+  @@map("lessons")
+}
+
+// many to many, relation - user <=> course
+model UserCourse {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+
+  paymentType PaymentType
+  dateStart   DateTime?
+  dateEnd     DateTime?
+
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId String
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  @@unique([clientId, courseId])
+}
+
+model Client {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  firstname String?
+  lastname  String?
+  hash      String?
+  hashedRt  String?
+  isBlock   Boolean  @default(false)
+
+  verificationCode        String?
+  verificationCodeExpires DateTime?
+  isEmailVerified         Boolean   @default(false)
+
+  passwordResetCode    String?
+  passwordResetExpires DateTime?
+
+  role       RoleClient?  @relation(fields: [role_id], references: [id])
+  role_id    String?
+  UserCourse UserCourse[]
+
+  @@map("clients")
+}
+
+model RoleClient {
+  id          String             @id @default(dbgenerated("gen_random_uuid()"))
+  title       String             @unique
+  permissions PermissionClient[] @default([product_view])
+
+  Client Client[]
+
+  @@map("roles_client")
+}
+
+enum PermissionClient {
+  product_create
+  product_view
+  product_update
+  product_delete
+
+  order_create
+  order_view
+  order_update
+  order_delete
+
+  @@map("permissions_client")
 }

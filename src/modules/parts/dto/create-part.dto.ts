@@ -1,10 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { IsNotEmpty, IsString } from "class-validator"
 
 export class CreatePartDto {
     @ApiProperty({
         type: String,
         description: "Title",
     })
+    @IsNotEmpty()
+    @IsString()
     title: string 
 
     @ApiProperty({
@@ -12,12 +15,16 @@ export class CreatePartDto {
         description: "Description",
         required: false
     })
+    @IsNotEmpty()
+    @IsString()
     descr?: string
 
     @ApiProperty({
-        type: Number,
+        type: String,
         description: "Course id",
         required: false
     })
-    courseId?: number
+    @IsNotEmpty()
+    @IsString()
+    courseId?: string
 }

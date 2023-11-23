@@ -1,5 +1,7 @@
+import { Permission } from '@prisma/client';
+
 export type JwtPayload = {
   email: string;
-  sub: number;
-  roles: string[]
+  sub: string;
+  permissions?: Permission[];
 };

@@ -2,8 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { RolesGuard } from 'src/common/guards';
-import { Roles } from 'src/common/decorators/roles.decorator';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -12,8 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @HttpCode(201)
   @Post()
   create(@Body() createLessonDto: CreateLessonDto) {
@@ -30,22 +27,20 @@ export class LessonsController {
   @HttpCode(200)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.lessonsService.findOne(+id);
+    return this.lessonsService.findOne(id);
   }
 
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @HttpCode(200)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLessonDto: UpdateLessonDto) {
-    return this.lessonsService.update(+id, updateLessonDto);
+    return this.lessonsService.update(id, updateLessonDto);
   }
 
-  @Roles('Admin')
-  @UseGuards(RolesGuard)
+  
   @HttpCode(200)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.lessonsService.remove(+id);
+    return this.lessonsService.remove(id);
   }
 }

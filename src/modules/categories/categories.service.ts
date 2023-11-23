@@ -16,7 +16,7 @@ export class CategoriesService {
     const category = await this.prismService.category.create({
       data: {...createCategoryDto, image: imageUrl}
     });
-    return {code: 201, data: category};
+    return category;
   } 
 
   async findAll() {
@@ -34,10 +34,10 @@ export class CategoriesService {
     if(!category[0]){
       throw new HttpException('No categories', HttpStatus.NOT_FOUND)
     }
-    return {code: 200, data: category};
+    return category
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const category = await this.prismService.category.findUnique({
       where: {id: id},
       include: {
@@ -53,10 +53,10 @@ export class CategoriesService {
     if(!category){
       throw new HttpException('No category', HttpStatus.NOT_FOUND)
     }
-    return {code: 200, data: category};
+    return category
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto, image: Express.Multer.File) {
+  async update(id: string, updateCategoryDto: UpdateCategoryDto, image: Express.Multer.File) {
     let imageUrl:string
     if(image){
       imageUrl = image.filename
@@ -66,11 +66,11 @@ export class CategoriesService {
       data: {...updateCategoryDto, image: imageUrl}
     })
 
-    return {code: 200, data: category};
+    return category
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const category = await this.prismService.category.delete({where: {id: id}})
-    return {code: 200, data: category}; 
+    return category
   }
 }

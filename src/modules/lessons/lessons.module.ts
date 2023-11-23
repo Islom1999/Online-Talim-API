@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { LessonsController } from './lessons.controller';
-import { SharedModule } from 'src/common/shared/sharedModule';
+import { SharedModule } from 'src/common/filter/sharedModule';
 
 @Module({
   controllers: [LessonsController],
