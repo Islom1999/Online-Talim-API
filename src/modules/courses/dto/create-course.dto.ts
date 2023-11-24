@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { PaymentType } from "@prisma/client"
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator"
 
 export class CreateCourseDto {
     @ApiProperty({
         type: String,
-        description: "Image file",
+        description: "Image name string",
     })
     @IsNotEmpty()
     @IsString()
@@ -34,7 +34,7 @@ export class CreateCourseDto {
     })
     @IsNotEmpty()
     @IsString()
-    author?: string
+    authorName?: string
 
     @ApiProperty({
         type: String,
@@ -42,8 +42,8 @@ export class CreateCourseDto {
         required: false
     })
     @IsNotEmpty()
-    @IsString()
-    amount?: string|number      // numberString
+    @IsNumber()
+    amount?: number      // numberString
 
     @ApiProperty({
         type: String,
@@ -59,6 +59,6 @@ export class CreateCourseDto {
         description: "Payment type ",
     })
     @IsNotEmpty()
-    @IsString()
+    @IsEnum(PaymentType)
     paymentType: PaymentType
 }

@@ -25,9 +25,33 @@ model User {
   role    role?   @relation(fields: [role_id], references: [id])
   role_id String?
 
-  Course Course[]
+  cources AdminCourse[]
 
   @@map("users")
+}
+
+model AdminCourse {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  @@unique([userId, courseId])
+}
+
+model Image {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  imageName String  @unique
+  unused    Boolean @default(true)
+
+  @@map("images")
 }
 
 model role {
@@ -104,11 +128,9 @@ model Course {
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
 
-  author   User?   @relation(fields: [authorId], references: [id])
-  authorId String?
-
-  parts   Part[]
-  viewers UserCourse[]
+  parts       Part[]
+  viewers     UserCourse[]
+  authors     AdminCourse[]
 
   @@map("courses")
 }
@@ -120,9 +142,10 @@ model Part {
 
   title String
   descr String?
+  order Int?
 
-  course   Course?  @relation(fields: [courseId], references: [id])
-  courseId String?
+  course   Course  @relation(fields: [courseId], references: [id])
+  courseId String
   lessons  Lesson[]
 
   @@map("parts")
@@ -136,9 +159,10 @@ model Lesson {
   video String?
   title String
   descr String?
+  order Int?
 
-  part   Part?   @relation(fields: [partId], references: [id])
-  partId String?
+  part   Part   @relation(fields: [partId], references: [id])
+  partId String
 
   @@map("lessons")
 }

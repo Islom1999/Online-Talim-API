@@ -6,9 +6,11 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
     @ApiProperty({
         type: String,
-        description: "Image file",
+        description: "Image name string",
     })
-    image?: string
+    @IsNotEmpty()
+    @IsString()
+    image: string
 
     @ApiProperty({
         type: String,

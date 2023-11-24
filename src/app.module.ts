@@ -11,20 +11,22 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BillingModule } from './modules/billing/billing.module';
+import { ImageModule } from './modules/image/image.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), 
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, 'uploads')
-    }),
-    AuthModule, 
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, 'uploads')
+    // }),
+    AuthModule,   
     PrismaModule, 
     LessonsModule, 
     PartsModule, 
     CoursesModule, 
     CategoriesModule,
     BillingModule,
+    ImageModule,
   ],
   providers: [
     {

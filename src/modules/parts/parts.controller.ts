@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, Query } from '@nestjs/common';
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
-import { UpdatePartDto } from './dto/update-part.dto';
+import { UpdatePartDto, UpdatePartOrdersDto } from './dto/update-part.dto';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryIdDto } from 'src/common/_query/query.dto';
 
 @ApiTags('parts')
 @Controller('part')
@@ -26,6 +27,13 @@ export class PartsController {
 
   @Public()
   @HttpCode(200)
+  @Get('withcourse')
+  findAllWithCourse(@Query() query: QueryIdDto ) {
+    return this.partsService.findAllWithCourse(query);
+  }
+
+  @Public()
+  @HttpCode(200)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.partsService.findOne(id);
@@ -36,6 +44,12 @@ export class PartsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePartDto: UpdatePartDto) {
     return this.partsService.update(id, updatePartDto);
+  }
+
+  @HttpCode(200)
+  @Patch('/update/orders')
+  updatePartOrders(@Body() updatePartDto: UpdatePartOrdersDto) {
+    return this.partsService.updatePartOrders(updatePartDto);
   }
 
   

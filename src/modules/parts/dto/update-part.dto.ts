@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreatePartDto } from './create-part.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdatePartDto extends PartialType(CreatePartDto) {
     @ApiProperty({
@@ -28,5 +28,16 @@ export class UpdatePartDto extends PartialType(CreatePartDto) {
     })
     @IsNotEmpty()
     @IsString()
-    courseId?: string
+    courseId: string
+}
+
+
+export class UpdatePartOrdersDto extends PartialType(CreatePartDto) {
+    @ApiProperty({
+        type: String,
+        description: "array in id string",
+    })
+    @IsNotEmpty()
+    @IsArray()
+    partIds: string[]
 }

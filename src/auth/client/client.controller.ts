@@ -23,7 +23,9 @@ import {
 } from '../dto';
 import { RtGuard } from 'src/common/guards';
 import { Tokens } from '../types';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth Client')
 @Controller('auth/client')
 export class ClientController {
   constructor(private authService: ClientService) {}

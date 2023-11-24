@@ -6,7 +6,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaErrorFilter } from './common/filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule); 
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -26,7 +26,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-  
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);

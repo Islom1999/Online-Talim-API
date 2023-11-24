@@ -17,7 +17,9 @@ import { AuthDto } from '../dto';
 import { Tokens } from '../types';
 import { AuthGuard } from '@nestjs/passport';
 import { RtGuard } from 'src/common/guards';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth Admin')
 @Controller('auth')
 export class AdminController {
   constructor(private authService: AdminService) {}

@@ -2,16 +2,16 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateCourseDto } from './create-course.dto';
 import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     @ApiProperty({
         type: String,
-        description: "Image file",
+        description: "Image name string",
     })
     @IsNotEmpty()
     @IsString()
-    image:  string
+    image?:  string
 
     @ApiProperty({
         type: String,
@@ -31,12 +31,12 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
 
     @ApiProperty({
         type: String,
-        description: "Author",
+        description: "Author Name",
         required: false
     })
     @IsNotEmpty()
     @IsString()
-    author?: string
+    authorName?: string
 
     @ApiProperty({
         type: String,
@@ -44,8 +44,8 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
         required: false
     })
     @IsNotEmpty()
-    @IsString()
-    amount?: string|number      // numberString
+    @IsNumber()
+    amount?: number      // numberString
 
     @ApiProperty({
         type: String,

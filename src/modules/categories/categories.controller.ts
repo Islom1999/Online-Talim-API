@@ -14,21 +14,11 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors( 
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: editFileName
-      }),
-      fileFilter: imageFileFilter
-    })  
-  )
   @Post()
   create(
     @Body() createCategoryDto: CreateCategoryDto,
-    @UploadedFile() image: Express.Multer.File
   ) {
-    return this.categoriesService.create(createCategoryDto, image);
+    return this.categoriesService.create(createCategoryDto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -46,22 +36,12 @@ export class CategoriesController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: editFileName
-      }),
-      fileFilter: imageFileFilter
-    })  
-  )
   @Patch(':id')
   update(
     @Param('id') id: string, 
     @Body() updateCategoryDto: UpdateCategoryDto,
-    @UploadedFile() image: Express.Multer.File
   ) {
-    return this.categoriesService.update(id, updateCategoryDto, image);
+    return this.categoriesService.update(id, updateCategoryDto);
   }
 
   @HttpCode(HttpStatus.OK)

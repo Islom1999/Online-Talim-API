@@ -26,5 +26,5 @@ export class CreatePartDto {
     })
     @IsNotEmpty()
     @IsString()
-    courseId?: string
+    courseId: string
 }
