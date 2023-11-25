@@ -92,9 +92,11 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  image String?
-  title String
-  descr String?
+  image    String?
+  title    String
+  descr    String?
+  isActive Boolean @default(false)
+  order    Int?
 
   courses Course[]
 
@@ -122,15 +124,17 @@ model Course {
   descr      String
   authorName String?
   amount     Int?
+  isActive   Boolean @default(false)
+  order      Int?
 
   paymentType PaymentType
 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
 
-  parts       Part[]
-  viewers     UserCourse[]
-  authors     AdminCourse[]
+  parts   Part[]
+  viewers UserCourse[]
+  authors AdminCourse[]
 
   @@map("courses")
 }
@@ -144,7 +148,7 @@ model Part {
   descr String?
   order Int?
 
-  course   Course  @relation(fields: [courseId], references: [id])
+  course   Course   @relation(fields: [courseId], references: [id])
   courseId String
   lessons  Lesson[]
 
@@ -161,8 +165,8 @@ model Lesson {
   descr String?
   order Int?
 
-  part   Part   @relation(fields: [partId], references: [id])
-  partId String
+  part   Part?   @relation(fields: [partId], references: [id])
+  partId String?
 
   @@map("lessons")
 }

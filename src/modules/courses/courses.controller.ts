@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus, Query } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryIdDto } from 'src/common/_query/query.dto';
+import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @ApiTags('courses')
 @Controller('course')
@@ -25,6 +27,13 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
+  @Public()
+  @HttpCode(200)
+  @Get('withcategory')
+  findAllWithCategory(@Query() query: QueryIdDto ) {
+    return this.coursesService.findAllWithCategory(query);
+  }
+
   @HttpCode(HttpStatus.OK)
   @Public()
   @Get(':id')
@@ -39,6 +48,12 @@ export class CoursesController {
     @Body() updateCourseDto: UpdateCourseDto,
   ) {
     return this.coursesService.update(id, updateCourseDto);
+  }
+
+  @HttpCode(200)
+  @Patch('/update/orders')
+  updateCourseOrders(@Body() updatePartDto: UpdateOrdersDto) {
+    return this.coursesService.updateCourseOrders(updatePartDto);
   }
 
   @HttpCode(HttpStatus.OK) 

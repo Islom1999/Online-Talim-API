@@ -3,6 +3,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ImageService } from '../image/image.service';
+import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -76,6 +77,31 @@ export class CategoriesService {
     })
 
     return category
+  }
+
+  async updateCategoryOrders(updatePartDto: UpdateOrdersDto): Promise<any> {
+    const { orderIds } = updatePartDto;
+    const ordersErr = []
+    const ordersSuccess = []
+
+    await Promise.all(
+      orderIds.map(async (orderId, index) => {
+        const model = await this.prismService.category.findUnique({
+          where: { id: orderId },
+        });
+        if (model) {
+          this.prismService.category.update({
+            where: { id: orderId },
+            data: { order: index },
+          });
+          ordersSuccess.push({ orderId, index })
+        }else{
+          ordersErr.push({ orderId, index })
+        }
+      }),
+      );
+    
+    return {message: 'update orders', ordersSuccess, ordersErr}
   }
 
   async remove(id: string) {

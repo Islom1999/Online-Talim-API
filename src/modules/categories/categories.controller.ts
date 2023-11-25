@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file.upload';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @ApiTags('category')
 @Controller('category')
@@ -42,6 +43,12 @@ export class CategoriesController {
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     return this.categoriesService.update(id, updateCategoryDto);
+  }
+
+  @HttpCode(200)
+  @Patch('/update/orders')
+  updateCourseOrders(@Body() updatePartDto: UpdateOrdersDto) {
+    return this.categoriesService.updateCategoryOrders(updatePartDto);
   }
 
   @HttpCode(HttpStatus.OK)

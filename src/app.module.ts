@@ -12,6 +12,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BillingModule } from './modules/billing/billing.module';
 import { ImageModule } from './modules/image/image.module';
+import { RoleModule } from './modules/role/role.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { ImageModule } from './modules/image/image.module';
     CategoriesModule,
     BillingModule,
     ImageModule,
+    RoleModule,
+    UserModule,
   ],
   providers: [
     {

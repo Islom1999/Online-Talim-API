@@ -3,6 +3,9 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ImageService } from '../image/image.service';
+import { QueryIdDto } from 'src/common/_query/query.dto';
+import { Course } from '@prisma/client';
+import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @Injectable()
 export class CoursesService {
@@ -66,6 +69,36 @@ export class CoursesService {
     return course;
   }
 
+  async findAllWithCategory(query: QueryIdDto):Promise<Course[]>{
+    const course = await this.prismaService.course.findMany({
+      // orderBy: { order: 'asc' },
+      where:{
+        categoryId: query.id
+      },
+      include: {
+        category: {
+          select: {
+            title: true
+          },
+        },
+        parts: {
+          select: {
+            title: true
+          }
+        },
+        authors:{
+          select: {
+            user: true,
+          }
+        }
+      }
+    })
+    if(!course[0]){
+      throw new HttpException('No course found', HttpStatus.NOT_FOUND)
+    }
+    return course;
+  }
+
   async findOne(id: string) {
     const course = await this.prismaService.course.findUnique({
       where: {id}, 
@@ -114,6 +147,31 @@ export class CoursesService {
       }
     })
     return course;
+  }
+
+  async updateCourseOrders(updatePartDto: UpdateOrdersDto): Promise<any> {
+    const { orderIds } = updatePartDto;
+    const ordersErr = []
+    const ordersSuccess = []
+
+    await Promise.all(
+      orderIds.map(async (orderId, index) => {
+        const model = await this.prismaService.course.findUnique({
+          where: { id: orderId },
+        });
+        if (model) {
+          this.prismaService.course.update({
+            where: { id: orderId },
+            data: { order: index },
+          });
+          ordersSuccess.push({ orderId, index })
+        }else{
+          ordersErr.push({ orderId, index })
+        }
+      }),
+      );
+    
+    return {message: 'update orders', ordersSuccess, ordersErr}
   }
 
   async remove(id: string) {

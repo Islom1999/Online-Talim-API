@@ -30,14 +30,3 @@ export class UpdatePartDto extends PartialType(CreatePartDto) {
     @IsString()
     courseId: string
 }
-
-
-export class UpdatePartOrdersDto extends PartialType(CreatePartDto) {
-    @ApiProperty({
-        type: String,
-        description: "array in id string",
-    })
-    @IsNotEmpty()
-    @IsArray()
-    partIds: string[]
-}
