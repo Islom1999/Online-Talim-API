@@ -8,12 +8,11 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { PartsModule } from './modules/parts/parts.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { CategoriesModule } from './modules/categories/categories.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { BillingModule } from './modules/billing/billing.module';
 import { ImageModule } from './modules/image/image.module';
 import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
+import { AdminModule } from '@admin-bro/nestjs';
 
 @Module({
   imports: [
