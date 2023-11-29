@@ -40,8 +40,8 @@ export class UserController {
     return this.service.getAll(queryDto);
   }
 
-  // @HttpCode(HttpStatus.OK)
-  // @Get('permission')
+  @HttpCode(HttpStatus.OK)
+  @Get('permission')
   async getPermissionByToken(
     @GetCurrentUserId() userId: string,
   ): Promise<Permission[]> {
