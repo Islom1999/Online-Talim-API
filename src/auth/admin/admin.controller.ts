@@ -13,7 +13,7 @@ import {
   GetCurrentUserId,
   Public,
 } from 'src/common/decorators';
-import { AuthDto } from '../dto';
+import { AuthDto, UpdateClientPasswordDto } from '../dto';
 import { Tokens } from '../types';
 import { AuthGuard } from '@nestjs/passport';
 import { RtGuard } from 'src/common/guards';
@@ -53,5 +53,29 @@ export class AdminController {
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
     return this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  // update pasword user
+  // reset password
+  @Post('/update-password')
+  async updateClientPassword(
+    @Body() dto: UpdateClientPasswordDto,
+    @GetCurrentUserId() userId: string,
+  ) {
+    return this.authService.updateClientPassword(userId, dto);
+  }
+
+  @Public()
+  @Post('/reset-password')
+  async requestPasswordReset(@Body() body: { email: string }) {
+    return this.authService.requestPasswordReset(body.email);
+  }
+
+  @Public()
+  @Post('/reset-password/new-password')
+  async resetPassword(
+    @Body() body: { email: string; code: string; password: string },
+  ) {
+    return this.authService.resetPassword(body.email, body.code, body.password);
   }
 }
