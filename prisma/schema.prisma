@@ -22,6 +22,9 @@ model User {
   image     String?
   phone     String?
 
+  passwordResetCode    String?
+  passwordResetExpires DateTime?
+
   role    role?   @relation(fields: [role_id], references: [id])
   role_id String?
 

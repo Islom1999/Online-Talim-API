@@ -1,13 +1,14 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDto, CreateUserDto, UpdatePasswordDto } from '../dto';
+import { AuthDto, CreateUserDto, UpdateClientPasswordDto, UpdatePasswordDto } from '../dto';
 import { JwtPayload, Tokens } from '../types';
 import * as argon from 'argon2';
 import { Prisma, User, role, } from '@prisma/client';
 import { baseUser, roleSuperAdmin } from '../role-data';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RoleType } from 'src/enumerations';
+import { MailService } from 'src/base';
 
 @Injectable()
 export class AdminService {
@@ -16,6 +17,7 @@ export class AdminService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private config: ConfigService,
+    private mailService: MailService,
   ) {
     this.url = config.get<string>('APP_URL');
   }
@@ -104,6 +106,79 @@ export class AdminService {
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
+  }
+
+  // update password user
+  async updateClientPassword(
+    id: string,
+    dto: UpdateClientPasswordDto,
+  ): Promise<any> {
+    const { password, newPassword } = dto;
+    const hash = await argon.hash(newPassword);
+
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    const passwordMatches = await argon.verify(user.hash, password);
+    if (!passwordMatches)
+      throw new ForbiddenException('Access denied password invalid');
+
+    // if(!password && !newPassword && !passwordMatches){
+    //   throw new ForbiddenException('Access Denied password invalid');
+    // }
+
+    await this.prisma.user.update({ where: { id }, data: { hash } });
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+
+    return tokens;
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new ForbiddenException('Access Denied, user not found');
+    }
+
+    const passwordResetCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
+    const passwordResetExpires = new Date();
+    passwordResetExpires.setHours(passwordResetExpires.getHours() + 1); // 1 soatlik muddat
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { passwordResetCode, passwordResetExpires },
+    });
+
+    await this.mailService.sendPasswordResetEmail(email, passwordResetCode);
+
+    return { email, message: 'Reset password send code email successfully' };
+  }
+
+  async resetPassword(email: string, code: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    const now = new Date();
+
+    if (
+      !user ||
+      user.passwordResetCode !== code ||
+      now > user.passwordResetExpires
+    ) {
+      throw new ForbiddenException('Access Denied');
+    }
+
+    const hash = await argon.hash(newPassword);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { hash, passwordResetCode: null, passwordResetExpires: null },
+    });
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+
+    return { message: 'password updated', ...tokens };
   }
 
   // Any controller methods

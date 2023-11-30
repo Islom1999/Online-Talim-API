@@ -10,9 +10,10 @@ import {
 import { JwtModule } from '@nestjs/jwt';
 import { BaseModule } from 'src/base/module/baseModule';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { MailService } from 'src/base';
 
 @Module({
-  providers: [AdminService, RtStrategy, AtStrategy],
+  providers: [AdminService, MailService, RtStrategy, AtStrategy],
   controllers: [AdminController],
   imports: [PrismaModule, JwtModule.register({})],
 })

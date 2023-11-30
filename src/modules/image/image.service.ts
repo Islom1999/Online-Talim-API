@@ -24,10 +24,17 @@ export class ImageService {
   }
 
   async changeImagesUsed(imageNames: string[]): Promise<void> {
-    await this._prisma.image.updateMany({
-      where: { imageName: { in: imageNames } },
-      data: { unused: false },
-    });
+    try {
+      const image = await this._prisma.image.findMany({where: { imageName: { in: imageNames } }})
+      if(image[0]){
+        await this._prisma.image.updateMany({
+          where: { imageName: { in: imageNames } },
+          data: { unused: false },
+        });
+      }
+    } catch (error) {
+      
+    }
   }
 
   async deleteImage(imageName: string): Promise<void> {
