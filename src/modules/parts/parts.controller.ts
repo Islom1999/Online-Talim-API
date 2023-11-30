@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, Query, HttpStatus } from '@nestjs/common';
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
 import { UpdatePartDto } from './dto/update-part.dto';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
-import { QueryIdDto } from 'src/common/_query/query.dto';
+import { QueryDTO, QueryIdDto } from 'src/common/_query/query.dto';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @ApiTags('parts')
@@ -24,6 +24,13 @@ export class PartsController {
   @Get()
   findAll() {
     return this.partsService.findAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @Get('pagination')
+  findAllPagination(@Query() query: QueryDTO) {
+    return this.partsService.findAllPagination(query);
   }
 
   @Public()

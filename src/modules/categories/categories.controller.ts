@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards, UseInterceptors, UploadedFile, HttpStatus, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file.upload';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
+import { QueryDTO } from 'src/common/_query';
 
 @ApiTags('category')
 @Controller('category')
@@ -27,6 +28,13 @@ export class CategoriesController {
   @Get()
   findAll() {
     return this.categoriesService.findAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @Get('pagination')
+  findAllPagination(@Query() query: QueryDTO) {
+    return this.categoriesService.findAllPagination(query);
   }
 
   @HttpCode(HttpStatus.OK)

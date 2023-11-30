@@ -55,7 +55,27 @@ export class UserService {
     return this._authService.updateUserPassword(id, userPassword);
   }
 
-  async getAll(queryDto: QueryDTO): Promise<any> {
+  async getAll(): Promise<any> {
+    const user = await this._prisma.user.findMany({
+      orderBy: { id: 'asc' },
+      include: {
+        role: true,
+      },
+    });
+
+    if (!user[0])
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    // omit password
+    user.forEach((u) => {
+      delete u.hash;
+      delete u.hashedRt;
+    });
+
+    return { data: user };
+  }
+
+  async getAllPagination(queryDto: QueryDTO): Promise<any> {
     const search = queryDto.search || '';
     const page = +queryDto.page || 1;
     const limit = +queryDto.limit || 25;
@@ -88,6 +108,7 @@ export class UserService {
 
     return { data: user, count };
   }
+
 
   async getById(id: string): Promise<User> {
     const user = await this._prisma.user.findUnique({

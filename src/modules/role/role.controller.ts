@@ -35,7 +35,7 @@ export class RoleController {
 
   // @Permissions('role_view')
   // @UseGuards(PermissionsGuard)
-  @Get('percentage')
+  @Get('pagination')
   findAllPercentage(@Query() queryDto: QueryDTO) {
     return this.roleService.findAllPercentage(queryDto);
   }

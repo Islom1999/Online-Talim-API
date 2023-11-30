@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePartDto } from './dto/create-part.dto';
 import { UpdatePartDto } from './dto/update-part.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { QueryIdDto } from 'src/common/_query/query.dto';
+import { QueryDTO, QueryIdDto } from 'src/common/_query/query.dto';
 import { Part } from '@prisma/client';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 import { async } from 'rxjs';
@@ -60,6 +60,31 @@ export class PartsService {
       throw new HttpException('No parts found', HttpStatus.NOT_FOUND);
     }
     return part;
+  }
+
+  async findAllPagination(queryDto: QueryDTO) {
+    const search = queryDto.search || '';
+    const page = +queryDto.page || 1;
+    const limit = +queryDto.limit || 25;
+    const skip = (page - 1) * limit;
+
+    const count = await this.prismaService.part.count();
+
+    const model = await this.prismaService.part.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      skip,
+      take: limit,
+    });
+
+    if (!model[0]) throw new HttpException('not found', HttpStatus.NOT_FOUND);
+
+    return { data: model, count };
   }
 
   async findOne(id: string): Promise<Part> {

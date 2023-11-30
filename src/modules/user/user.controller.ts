@@ -32,12 +32,16 @@ export class UserController {
     return this.service.createUser(userDto);
   }
 
-  // @Permissions('user_view')
-  // @UseGuards(PermissionsGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
-  async getAll(@Query() queryDto: QueryDTO): Promise<User[]> {
-    return this.service.getAll(queryDto);
+  async getAll(): Promise<User[]> {
+    return this.service.getAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('pagination')
+  async getAllPagination(@Query() queryDto: QueryDTO): Promise<User[]> {
+    return this.service.getAllPagination(queryDto);
   }
 
   @HttpCode(HttpStatus.OK)

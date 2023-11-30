@@ -4,7 +4,7 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
-import { QueryIdDto } from 'src/common/_query/query.dto';
+import { QueryDTO, QueryIdDto } from 'src/common/_query/query.dto';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @ApiTags('lessons')
@@ -30,6 +30,13 @@ export class LessonsController {
   @Get('withpart')
   findAllWithCourse(@Query() query: QueryIdDto ) {
     return this.lessonsService.findAllWithCourse(query);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @Get('pagination')
+  findAllPagination(@Query() query: QueryDTO) {
+    return this.lessonsService.findAllPagination(query);
   }
 
   @Public()

@@ -3,7 +3,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ImageService } from '../image/image.service';
-import { QueryIdDto } from 'src/common/_query/query.dto';
+import { QueryDTO, QueryIdDto } from 'src/common/_query/query.dto';
 import { Course } from '@prisma/client';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
@@ -97,6 +97,31 @@ export class CoursesService {
       throw new HttpException('No course found', HttpStatus.NOT_FOUND)
     }
     return course;
+  }
+
+  async findAllPagination(queryDto: QueryDTO) {
+    const search = queryDto.search || '';
+    const page = +queryDto.page || 1;
+    const limit = +queryDto.limit || 25;
+    const skip = (page - 1) * limit;
+
+    const count = await this.prismaService.course.count();
+
+    const model = await this.prismaService.course.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      skip,
+      take: limit,
+    });
+
+    if (!model[0]) throw new HttpException('not found', HttpStatus.NOT_FOUND);
+
+    return { data: model, count };
   }
 
   async findOne(id: string) {

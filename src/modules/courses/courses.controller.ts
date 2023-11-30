@@ -4,7 +4,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Public } from 'src/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
-import { QueryIdDto } from 'src/common/_query/query.dto';
+import { QueryDTO, QueryIdDto } from 'src/common/_query/query.dto';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
 
 @ApiTags('courses')
@@ -32,6 +32,13 @@ export class CoursesController {
   @Get('withcategory')
   findAllWithCategory(@Query() query: QueryIdDto ) {
     return this.coursesService.findAllWithCategory(query);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @Get('pagination')
+  findAllPagination(@Query() query: QueryDTO) {
+    return this.coursesService.findAllPagination(query);
   }
 
   @HttpCode(HttpStatus.OK)

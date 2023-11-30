@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ImageService } from '../image/image.service';
 import { UpdateOrdersDto } from 'src/common/_query/order.dto';
+import { QueryDTO } from 'src/common/_query';
 
 @Injectable()
 export class CategoriesService {
@@ -36,6 +37,31 @@ export class CategoriesService {
       throw new HttpException('No categories', HttpStatus.NOT_FOUND)
     }
     return category
+  }
+
+  async findAllPagination(queryDto: QueryDTO) {
+    const search = queryDto.search || '';
+    const page = +queryDto.page || 1;
+    const limit = +queryDto.limit || 25;
+    const skip = (page - 1) * limit;
+
+    const count = await this.prismService.category.count();
+
+    const model = await this.prismService.category.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      skip,
+      take: limit,
+    });
+
+    if (!model[0]) throw new HttpException('not found', HttpStatus.NOT_FOUND);
+
+    return { data: model, count };
   }
 
   async findOne(id: string) {
