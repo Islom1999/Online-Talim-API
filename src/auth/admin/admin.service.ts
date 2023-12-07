@@ -200,7 +200,7 @@ export class AdminService {
       }
 
       const newUser = await this.prisma.user.create({
-        data: { email: dto.email, hash, role_id: _role.id, name: dto.name },
+        data: { email: dto.email, hash, role_id: _role.id, name: dto.name, isBlock: dto.isBlock },
         include: {
           role: true,
         },
