@@ -56,8 +56,13 @@ export class UserService {
   }
 
   async getAll(): Promise<any> {
+    const role = await this._prisma.role.findUnique({where: { title: RoleType.SUPER_ADMIN}})
+
     const user = await this._prisma.user.findMany({
       orderBy: { id: 'asc' },
+      where: {
+        role_id: {notIn: [role.id]}
+      },
       include: {
         role: true,
       },
@@ -82,13 +87,18 @@ export class UserService {
     const skip = (page - 1) * limit;
     const count = await this._prisma.user.count();
 
+    const role = await this._prisma.role.findUnique({where: { title: RoleType.SUPER_ADMIN}})
+
     const user = await this._prisma.user.findMany({
       orderBy: { id: 'asc' },
       where: {
-        email: {
-          contains: search,
-          mode: 'insensitive',
-        },
+        AND:{
+          email: {
+            contains: search,
+            mode: 'insensitive',
+          },
+          role_id: {notIn: [role.id]}
+        }
       },
       skip,
       take: limit,

@@ -29,6 +29,7 @@ export class RoleService {
 
   async findAll() {
     const role = await this._prisma.role.findMany({
+      where: {title: {notIn: [RoleType.SUPER_ADMIN]}},
       orderBy: { id: 'asc' },
     });
 
@@ -47,10 +48,13 @@ export class RoleService {
     const role = await this._prisma.role.findMany({
       orderBy: { id: 'asc' },
       where: {
-        title: {
-          contains: search,
-          mode: 'insensitive',
-        },
+        AND:{
+          title: {
+            contains: search,
+            mode: 'insensitive',
+            notIn: [RoleType.SUPER_ADMIN]
+          },
+        }
       },
       skip,
       take: limit,
